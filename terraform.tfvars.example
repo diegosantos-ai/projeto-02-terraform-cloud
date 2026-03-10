@@ -1,3 +1,4 @@
-aws_region    = "us-east-1"
-project_name  = "aws-web-infra"
-instance_type = "t2.micro"
+aws_region   = "us-east-1"
+project_name = "projeto-02"
+environment  = "dev"
+owner        = "DiegoSantos"
