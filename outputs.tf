@@ -13,12 +13,7 @@ output "project_name" {
   value       = var.project_name
 }
 
-output "name_prefix" {
-  description = "Prefixo padrão para nomeação dos recursos"
-  value       = var.name_prefix
-}
-
-output "common_tags" {
-  description = "Tags padrão aplicadas aos recursos do projeto"
-  value       = var.common_tags
+output "owner" {
+  description = "Responsável pelo projeto"
+  value       = var.owner
 }
