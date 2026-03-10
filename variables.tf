@@ -17,3 +17,21 @@ variable "owner" {
   description = "Owner responsible for the infrastructure resources."
   type        = string
 }
+
+variable "vpc_cidr" {
+  description = "Bloco CIDR da VPC do projeto"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "public_subnet_cidr" {
+  description = "Bloco CIDR da subnet pública"
+  type        = string
+  default     = "10.0.1.0/24"
+}
+
+variable "public_subnet_az" {
+  description = "Availability Zone da subnet pública"
+  type        = string
+  default     = "us-east-1a"
+}
