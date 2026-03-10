@@ -37,3 +37,4 @@ override.tf.json
 # IDEs
 .vscode/
 .idea/
+doc-consulta-conceitos.md
