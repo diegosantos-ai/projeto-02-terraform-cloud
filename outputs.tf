@@ -20,40 +20,40 @@ output "owner" {
 
 output "vpc_id" {
   description = "ID da VPC principal do projeto"
-  value       = aws_vpc.main.id
+  value       = module.network.vpc_id
 }
 
 output "public_subnet_id" {
   description = "ID da subnet pública"
-  value       = aws_subnet.public.id
+  value       = module.network.public_subnet_id
 }
 
 output "internet_gateway_id" {
   description = "ID do Internet Gateway da VPC principal"
-  value       = aws_internet_gateway.main.id
+  value       = module.network.internet_gateway_id
 }
 
 output "public_route_table_id" {
   description = "ID da route table pública"
-  value       = aws_route_table.public.id
+  value       = module.network.public_route_table_id
 }
 
 output "web_security_group_id" {
   description = "ID do security group do serviço web"
-  value       = aws_security_group.web.id
+  value       = module.security.web_security_group_id
 }
 
 output "web_instance_id" {
   description = "ID da instância EC2 web"
-  value       = aws_instance.web.id
+  value       = module.compute.web_instance_id
 }
 
 output "web_instance_public_ip" {
   description = "IP público da instância EC2 web"
-  value       = aws_instance.web.public_ip
+  value       = module.compute.web_instance_public_ip
 }
 
 output "web_instance_public_dns" {
   description = "DNS público da instância EC2 web"
-  value       = aws_instance.web.public_dns
+  value       = module.compute.web_instance_public_dns
 }
