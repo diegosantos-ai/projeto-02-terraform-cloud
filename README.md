@@ -1,181 +1,254 @@
 # Projeto 02 — AWS Web Infrastructure with Terraform
 
-## Visão Geral
+Provisionamento de infraestrutura básica na AWS com Terraform para hospedagem de serviço web simples, aplicando práticas de IaC, organização progressiva, validação e rastreabilidade.
 
-Este projeto tem como objetivo provisionar, via Terraform, uma infraestrutura web básica na AWS para hospedar um serviço web simples.
+![Terraform](https://img.shields.io/badge/Terraform-IaC-623CE4?style=for-the-badge&logo=terraform&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-Cloud-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white)
+![EC2](https://img.shields.io/badge/Amazon_EC2-Compute-FF9900?style=for-the-badge&logo=amazon-ec2&logoColor=white)
+![VPC](https://img.shields.io/badge/Amazon_VPC-Networking-146EB4?style=for-the-badge&logo=amazonaws&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-Server-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![Git](https://img.shields.io/badge/Git-Versionamento-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=for-the-badge)
 
-A proposta simula um cenário real em que uma equipe precisa publicar um ambiente de forma padronizada, reproduzível e sem depender da criação manual de recursos no console da cloud.
+## Visão geral
 
-O foco do projeto é demonstrar práticas de **Infraestrutura como Código (IaC)**, organização técnica, versionamento, gerenciamento de estado e evolução para automação com pipeline.
+Este projeto tem como objetivo provisionar, via Terraform, uma infraestrutura básica na AWS para hospedar um serviço web simples, aplicando práticas de Infraestrutura como Código (IaC), organização progressiva, versionamento, validação e documentação técnica.
 
----
-
-## Problema que o projeto resolve
-
-Em muitos cenários reais, ambientes de nuvem são criados manualmente no console da AWS, o que gera problemas como:
-
-- falta de padronização
-- dificuldade de reproduzir ambientes
-- baixa rastreabilidade de mudanças
-- dependência de conhecimento informal
-- maior risco de erro operacional
-
-Este projeto resolve esse problema ao definir a infraestrutura por código, permitindo criar, alterar e destruir recursos de forma previsível, auditável e reutilizável.
+A proposta é simular um cenário real em que uma equipe precisa publicar rapidamente um serviço web institucional de forma padronizada, reproduzível e rastreável, evitando a criação manual de recursos no console da AWS.
 
 ---
 
-## Objetivo Principal
+## Objetivo principal
 
 Provisionar via Terraform uma infraestrutura básica na AWS para hospedar um serviço web simples, aplicando práticas de Infraestrutura como Código, organização modular progressiva, gerenciamento de estado e automação de validação.
 
 ---
 
-## Objetivos Técnicos
-
-- automatizar a criação da infraestrutura sem uso manual do console AWS
-- demonstrar uso de Terraform com organização e legibilidade
-- provisionar rede, regras de acesso e instância EC2 via código
-- utilizar variáveis e outputs para melhorar manutenção e reuso
-- preparar o projeto para evolução com módulos
-- demonstrar entendimento de state local e backend remoto
-- evoluir o fluxo para validação automatizada com GitHub Actions
-
----
-
-## Case do Projeto
+## Case do projeto
 
 Uma equipe precisa publicar um serviço web institucional simples na AWS de forma rápida, padronizada e reproduzível.
 
-Em vez de criar manualmente VPC, subnets, regras de firewall e instâncias EC2 no console, a infraestrutura é provisionada integralmente com Terraform, permitindo versionamento, revisão e reaplicação do ambiente.
+Em vez de criar manualmente VPC, subnets, regras de firewall e instâncias EC2 no console, a infraestrutura é provisionada integralmente com Terraform, permitindo versionamento, revisão, reaplicação e maior previsibilidade operacional.
 
 ---
 
-## Escopo do MVP
+## Escopo do projeto
 
-O MVP deste projeto contempla:
+A infraestrutura contempla:
 
-- configuração do provider AWS
-- criação de uma VPC
-- criação de uma subnet pública
-- criação de Internet Gateway
-- criação de Route Table pública
-- associação da Route Table à subnet
-- criação de Security Group para acesso ao serviço web
-- provisionamento de uma instância EC2
-- execução de servidor web simples via `user_data`
-- exposição de outputs relevantes da infraestrutura
-- fluxo funcional de `init`, `fmt`, `validate`, `plan`, `apply` e `destroy`
-
----
-
-## Evoluções Planejadas
-
-Após o MVP, o projeto poderá evoluir com:
-
-- separação dos recursos por responsabilidade
-- modularização da infraestrutura
-- backend remoto com S3
-- lock de state com DynamoDB
-- validação automatizada com GitHub Actions
-- melhoria de documentação e arquitetura
-- execução opcional de serviço web em container Docker
+- VPC customizada
+- subnet pública
+- Internet Gateway
+- route table pública
+- rota default para internet
+- associação da route table à subnet pública
+- security group para serviço web
+- acesso HTTP público
+- acesso SSH restrito por IP
+- instância EC2 com IP público
+- `user_data` para publicação automática de serviço web simples
+- outputs para consulta e validação da infraestrutura
 
 ---
 
-## Arquitetura Esperada
+## Tecnologias utilizadas
 
-A infraestrutura provisionada deverá conter:
-
-- **VPC** para isolamento da rede
-- **subnet pública** para hospedagem da instância
-- **Internet Gateway** para acesso externo
-- **Route Table** com rota para internet
-- **Security Group** controlando acesso HTTP e SSH
-- **EC2** executando um servidor web simples
-
-Fluxo lógico:
-
-`Terraform -> AWS VPC/Subnet/IGW/Route Table/Security Group -> EC2 -> Serviço Web`
+- Terraform
+- AWS
+- Amazon VPC
+- Amazon EC2
+- Subnet
+- Internet Gateway
+- Route Table
+- Security Groups
+- Linux
+- HTTP
+- Git
+- GitHub
 
 ---
 
-## Estrutura Inicial do Projeto
+## Região e convenções do projeto
 
-```bash
+### Região AWS
+- `us-east-1`
+
+### Convenção de nomes
+- `p02-dev-<recurso>`
+
+### Tags padrão
+- `Project = projeto-02`
+- `Name = nome-do-recurso`
+- `Environment = dev`
+- `ManagedBy = Terraform`
+- `Owner = DiegoSantos`
+
+---
+
+## Estrutura atual do projeto
+
+```text
 .
 ├── contexto.md
-├── main.tf
-├── outputs.tf
 ├── provider.tf
-├── README.md
+├── variables.tf
 ├── terraform.tfvars
-└── variables.tf
+├── terraform.tfvars.example
+├── network.tf
+├── security.tf
+├── ec2.tf
+├── outputs.tf
+├── README.md
+└── .gitignore
 ````
 
-> Observação: a estrutura será evoluída ao longo do projeto conforme a necessidade de organização, separação de responsabilidades e modularização.
+### Responsabilidade dos arquivos
 
---- 
+* `provider.tf`
+  Configuração do provider AWS.
+
+* `variables.tf`
+  Declaração das variáveis de entrada do projeto.
+
+* `terraform.tfvars`
+  Valores reais locais utilizados na execução.
+
+* `terraform.tfvars.example`
+  Exemplo de preenchimento das variáveis.
+
+* `network.tf`
+  Recursos de rede, como VPC, subnet, Internet Gateway, route table e associação.
+
+* `security.tf`
+  Recursos de segurança, como security group e regras de entrada e saída.
+
+* `ec2.tf`
+  Provisionamento da instância EC2 e configuração de `user_data`.
+
+* `outputs.tf`
+  Saídas da infraestrutura para consulta e validação.
+
+* `README.md`
+  Documentação principal do projeto.
+
+---
+
+## Status do projeto
+
+### Fases concluídas
+
+* Fase 1 — Definição e base do projeto
+* Fase 2 — Estruturação base do Terraform
+* Fase 3 — Provisionamento da rede
+* Fase 4 — Segurança de acesso
+* Fase 5 — Provisionamento da EC2
+* Fase 6 — Refino do projeto
+
+### Fase atual
+
+Fase 7 — Modularização
+
+### Próximas fases
+
+* Fase 8 — Estado remoto
+* Fase 9 — CI/CD com GitHub Actions
+* Fase 10 — Fechamento de portfólio
+
+---
+
+## Infraestrutura provisionada até o momento
+
+### Rede
+
+* `aws_vpc.main`
+* `aws_subnet.public`
+* `aws_internet_gateway.main`
+* `aws_route_table.public`
+* `aws_route.public_internet_access`
+* `aws_route_table_association.public`
+
+### Segurança
+
+* `aws_security_group.web`
+* `aws_vpc_security_group_ingress_rule.web_http`
+* `aws_vpc_security_group_ingress_rule.web_ssh`
+* `aws_vpc_security_group_egress_rule.web_all_outbound`
+
+### Computação
+
+* `aws_instance.web`
+
+---
+
+## Outputs disponíveis
+
+* `aws_region`
+* `environment`
+* `project_name`
+* `owner`
+* `vpc_id`
+* `public_subnet_id`
+* `internet_gateway_id`
+* `public_route_table_id`
+* `web_security_group_id`
+* `web_instance_id`
+* `web_instance_public_ip`
+* `web_instance_public_dns`
+
+---
+
+## Pré-requisitos
+
+Antes de executar o projeto, é necessário ter:
+
+* Terraform instalado
+* AWS CLI instalada e configurada
+* credenciais AWS válidas no ambiente local
+* um Key Pair já existente na AWS na região `us-east-1`
+* permissões suficientes para criar recursos de rede, segurança e EC2
+
+---
+
+## Configuração do projeto
+
+### 1. Clonar o repositório
+
+```bash
+git clone <url-do-repositorio>
+cd projeto-02-terraform-cloud
 ```
-## Decisão de arquitetura:
 
-Nesta etapa do projeto, a infraestrutura permanecerá organizada por responsabilidade de arquivo no root module, evitando modularização prematura. A adoção de módulos será considerada em fases futuras, quando houver repetição real de componentes, aumento de complexidade ou necessidade concreta de reutilização. Essa abordagem mantém o projeto simples, legível e alinhado ao estágio atual da solução, sem perder a possibilidade de evolução posterior.
+### 2. Revisar o arquivo de exemplo
 
----
+Use o arquivo `terraform.tfvars.example` como referência para preencher o `terraform.tfvars`.
 
-## Tecnologias Utilizadas
+### 3. Criar ou ajustar o `terraform.tfvars`
 
-* Terraform
-* AWS
-* Amazon VPC
-* Amazon EC2
-* Security Groups
-* Git
-* GitHub Actions (evolução planejada)
+Exemplo:
 
----
+```hcl
+aws_region        = "us-east-1"
+project_name      = "projeto-02"
+environment       = "dev"
+owner             = "DiegoSantos"
 
-## Requisitos Funcionais
+vpc_cidr_block    = "10.0.0.0/16"
+public_subnet_cidr = "10.0.1.0/24"
+availability_zone = "us-east-1a"
 
-O projeto deve ser capaz de:
+ssh_allowed_cidr  = "SEU_IP_PUBLICO/32"
 
-* criar uma VPC na AWS
-* criar uma subnet pública
-* permitir saída para internet
-* criar regras de acesso adequadas
-* provisionar uma instância EC2
-* disponibilizar um serviço web simples
-* exibir informações úteis via outputs
-* destruir a infraestrutura de forma controlada
+instance_type     = "t3.micro"
+key_pair_name     = "diego-key"
+```
+
+> O valor de `key_pair_name` deve ser o nome exato de um Key Pair já existente na AWS na região `us-east-1`.
 
 ---
 
-## Requisitos Não Funcionais
+## Fluxo de execução
 
-O projeto deve:
-
-* ser legível e organizado
-* evitar hard-coding desnecessário
-* permitir manutenção e evolução
-* não expor credenciais no repositório
-* ser validável com comandos do Terraform
-* ser reproduzível por outra pessoa
-* refletir boas práticas de organização de IaC
-
----
-
-## Fluxo Operacional Esperado
-
-O fluxo básico de operação do projeto será:
-
-1. inicializar o Terraform
-2. formatar o código
-3. validar a configuração
-4. revisar o plano de execução
-5. aplicar a infraestrutura
-6. validar os recursos criados
-7. destruir a infraestrutura quando necessário
-
-Comandos esperados:
+A execução padrão do projeto segue esta ordem:
 
 ```bash
 terraform init
@@ -183,70 +256,157 @@ terraform fmt
 terraform validate
 terraform plan
 terraform apply
-terraform destroy
+terraform output
+terraform state list
 ```
 
 ---
 
-## Boas Práticas Consideradas
+## Fluxo operacional recomendado
 
-* infraestrutura definida como código
-* mudanças revisadas antes do `apply`
-* uso de variáveis para valores configuráveis
-* uso de outputs para inspeção dos recursos criados
-* evolução progressiva da estrutura
-* separação entre laboratório e prática recomendada de produção
-* documentação como parte da entrega
+### Antes de alterar
 
----
+* revisar contexto atual do projeto
+* confirmar branch correta
+* verificar `git status`
+* validar estado atual da infraestrutura
+* revisar impacto antes de aplicar mudanças
 
-## Riscos e Cuidados Operacionais
+### Durante a execução
 
-Durante o desenvolvimento deste projeto, alguns pontos exigem atenção:
+* rodar `terraform fmt`
+* rodar `terraform validate`
+* ler o `terraform plan`
+* aplicar somente após validação do comportamento esperado
 
-* nunca versionar credenciais AWS
-* revisar cuidadosamente o `terraform plan` antes do `apply`
-* documentar simplificações de laboratório
-* evitar exposição excessiva de portas no Security Group
-* tratar o arquivo de state com atenção
-* destruir recursos ao final dos testes para evitar custo desnecessário
+### Após a execução
 
----
-
-## Status do Projeto
-
-Projeto em fase de construção.
-
-Etapas previstas:
-
-* definição e organização inicial
-* provisionamento da rede
-* provisionamento da EC2
-* refino e documentação
-* modularização
-* backend remoto
-* CI/CD com GitHub Actions
+* revisar `terraform output`
+* revisar `terraform state list`
+* validar recursos no console AWS
+* validar entrega funcional do serviço
 
 ---
 
-## Aprendizados Esperados
+## Critérios de validação do projeto
 
-Este projeto foi desenhado para demonstrar e consolidar conhecimentos em:
+A validação do projeto não termina no `terraform apply`.
 
-* Terraform
-* AWS
-* Infraestrutura como Código
-* organização de projeto DevOps
-* pensamento declarativo
-* operação segura com validação prévia
-* evolução de ambiente local para fluxo mais próximo do mundo real
+Cada fase deve ser considerada concluída apenas quando houver evidência técnica e funcional da entrega.
+
+### Validações padrão
+
+* `terraform fmt`
+* `terraform validate`
+* `terraform plan`
+* `terraform apply`
+* `terraform output`
+* `terraform state list`
+* validação no console AWS
+
+### Validação funcional da EC2
+
+* instância criada com sucesso
+* subnet correta
+* security group correto
+* IP público atribuído
+* serviço web respondendo externamente
+
+### Exemplo de validação HTTP
+
+```bash
+curl http://IP_PUBLICO
+```
+
+---
+
+## Exemplo de resultado esperado
+
+Após o provisionamento da EC2, espera-se que o serviço responda algo semelhante a:
+
+```html
+<html>
+  <head>
+    <title>Projeto 02</title>
+  </head>
+  <body>
+    <h1>Projeto 02 - AWS Web Infrastructure with Terraform</h1>
+    <p>Servico web publicado com sucesso via Terraform.</p>
+    <p>Environment: dev</p>
+    <p>Owner: DiegoSantos</p>
+  </body>
+</html>
+```
+
+---
+
+## Decisão de arquitetura
+
+Nesta etapa do projeto, a infraestrutura permanece organizada por responsabilidade de arquivo no root module, evitando modularização prematura.
+
+A adoção de módulos será considerada em fases futuras, quando houver repetição real de componentes, aumento de complexidade ou necessidade concreta de reutilização.
+
+Essa abordagem mantém o projeto simples, legível e alinhado ao estágio atual da solução, sem perder a possibilidade de evolução posterior.
+
+---
+
+## Boas práticas aplicadas
+
+* provisionamento via Infraestrutura como Código
+* separação de responsabilidades por arquivo
+* leitura de `terraform plan` antes de `apply`
+* uso de variáveis e outputs para legibilidade e reuso
+* controle de acesso SSH com restrição por IP
+* validação terminal + console AWS
+* versionamento por branch e fase
+* rastreabilidade de entregas com Git e Trello
+* documentação contínua do projeto
+
+---
+
+## Cuidados importantes
+
+* não versionar `terraform.tfvars`
+* não versionar arquivos de state
+* não armazenar credenciais AWS em arquivos do projeto
+* validar mudanças antes de aplicar em ambiente
+* tratar recursos de segurança com cuidado, especialmente SSH
+* destruir recursos ao final do uso se o objetivo for apenas laboratório, evitando custos desnecessários
+
+---
+
+## Limpeza do ambiente
+
+Caso seja necessário remover os recursos provisionados:
+
+```bash
+terraform destroy
+```
+
+> Execute com atenção e somente quando tiver certeza de que o ambiente pode ser removido.
+
+---
+
+## Próximos passos
+
+A próxima etapa do projeto é a **Fase 6 — Refino do projeto**, com foco em:
+
+* revisão de nomes dos recursos
+* revisão de variáveis e defaults
+* revisão de outputs
+* redução de hard-codes
+* melhoria de legibilidade
+* melhoria de documentação
+* refinamento da reprodutibilidade
 
 ---
 
 ## Autor
 
 **Diego Santos**
-Projeto desenvolvido como parte de uma trilha prática de evolução em DevOps e Cloud.
+
+Projeto desenvolvido como prática de portfólio com foco em evolução técnica em DevOps, Cloud e Infraestrutura como Código.
 
 ```
+
 

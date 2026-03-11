@@ -1,20 +1,20 @@
 variable "aws_region" {
-  description = "AWS region where the infrastructure will be provisioned."
+  description = "Região AWS onde a infraestrutura será provisionada"
   type        = string
 }
 
 variable "project_name" {
-  description = "Project name used for resource organization and naming."
+  description = "Nome do projeto utilizado na organização e nomenclatura dos recursos"
   type        = string
 }
 
 variable "environment" {
-  description = "Environment name used to identify the deployment context."
+  description = "Nome do ambiente utilizado para identificar o contexto da infraestrutura"
   type        = string
 }
 
 variable "owner" {
-  description = "Owner responsible for the infrastructure resources."
+  description = "Responsável pelos recursos provisionados"
   type        = string
 }
 
@@ -42,12 +42,12 @@ variable "ssh_allowed_cidr" {
 }
 
 variable "instance_type" {
-  description = "Tipo da instancia EC2"
+  description = "Tipo da instância EC2"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 
 variable "key_pair_name" {
-  description = "Nome do key pair existente na AWS para acesso SSH"
+  description = "Nome do Key Pair existente na AWS para acesso SSH"
   type        = string
 }

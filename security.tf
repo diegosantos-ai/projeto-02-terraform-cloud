@@ -4,11 +4,11 @@ resource "aws_security_group" "web" {
   vpc_id      = aws_vpc.main.id
 
   tags = {
-    Project     = "projeto-02"
+    Project     = var.project_name
     Name        = "p02-dev-web-sg"
-    Environment = "dev"
+    Environment = var.environment
     ManagedBy   = "Terraform"
-    Owner       = "DiegoSantos"
+    Owner       = var.owner
   }
 }
 
@@ -20,11 +20,11 @@ resource "aws_vpc_security_group_ingress_rule" "web_http" {
   to_port           = 80
 
   tags = {
-    Project     = "projeto-02"
+    Project     = var.project_name
     Name        = "p02-dev-web-sg-http"
-    Environment = "dev"
+    Environment = var.environment
     ManagedBy   = "Terraform"
-    Owner       = "DiegoSantos"
+    Owner       = var.owner
   }
 }
 
@@ -36,11 +36,11 @@ resource "aws_vpc_security_group_ingress_rule" "web_ssh" {
   to_port           = 22
 
   tags = {
-    Project     = "projeto-02"
+    Project     = var.project_name
     Name        = "p02-dev-web-sg-ssh"
-    Environment = "dev"
+    Environment = var.environment
     ManagedBy   = "Terraform"
-    Owner       = "DiegoSantos"
+    Owner       = var.owner
   }
 }
 
@@ -50,10 +50,10 @@ resource "aws_vpc_security_group_egress_rule" "web_all_outbound" {
   ip_protocol       = "-1"
 
   tags = {
-    Project     = "projeto-02"
+    Project     = var.project_name
     Name        = "p02-dev-web-sg-egress"
-    Environment = "dev"
+    Environment = var.environment
     ManagedBy   = "Terraform"
-    Owner       = "DiegoSantos"
+    Owner       = var.owner
   }
 }

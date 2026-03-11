@@ -39,21 +39,21 @@ output "public_route_table_id" {
 }
 
 output "web_security_group_id" {
-  description = "ID do security group do servico web"
+  description = "ID do security group do serviço web"
   value       = aws_security_group.web.id
 }
 
 output "web_instance_id" {
-  description = "ID da instancia EC2 web"
+  description = "ID da instância EC2 web"
   value       = aws_instance.web.id
 }
 
 output "web_instance_public_ip" {
-  description = "IP publico da instancia EC2 web"
+  description = "IP público da instância EC2 web"
   value       = aws_instance.web.public_ip
 }
 
 output "web_instance_public_dns" {
-  description = "DNS publico da instancia EC2 web"
+  description = "DNS público da instância EC2 web"
   value       = aws_instance.web.public_dns
 }
