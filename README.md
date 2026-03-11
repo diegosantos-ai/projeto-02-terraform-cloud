@@ -89,47 +89,48 @@ A infraestrutura contempla:
 
 ```text
 .
-├── contexto.md
+├── main.tf
 ├── provider.tf
 ├── variables.tf
+├── outputs.tf
 ├── terraform.tfvars
 ├── terraform.tfvars.example
 ├── network.tf
 ├── security.tf
 ├── ec2.tf
-├── outputs.tf
+├── modules
+│   ├── network
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   ├── security
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   └── compute
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
 ├── README.md
 └── .gitignore
-````
+```
 
-### Responsabilidade dos arquivos
+## Responsabilidade dos arquivos
 
-* `provider.tf`
-  Configuração do provider AWS.
+| Arquivo/Diretório | Descrição |
+|---|---|
+| `main.tf` | Orquestra os módulos do projeto e registra os blocos `moved` da refatoração. |
+| `provider.tf` | Configuração do provider AWS. |
+| `variables.tf` | Declaração das variáveis de entrada do projeto no root module. |
+| `outputs.tf` | Saídas finais expostas pelo root module. |
+| `terraform.tfvars` | Valores locais reais utilizados na execução. |
+| `terraform.tfvars.example` | Exemplo de preenchimento das variáveis. |
+| `modules/network` | Recursos de rede: VPC, subnet pública, Internet Gateway, route table, rota default e associação. |
+| `modules/security` | Recursos de segurança: security group e regras de entrada e saída. |
+| `modules/compute` | Recursos de computação: busca de AMI e provisionamento da instância EC2. |
+| `network.tf`, `security.tf`, `ec2.tf` | Arquivos legados mantidos apenas como referência da refatoração desta fase, com recursos migrados para módulos. |
+| `README.md` | Documentação principal do projeto. |
 
-* `variables.tf`
-  Declaração das variáveis de entrada do projeto.
-
-* `terraform.tfvars`
-  Valores reais locais utilizados na execução.
-
-* `terraform.tfvars.example`
-  Exemplo de preenchimento das variáveis.
-
-* `network.tf`
-  Recursos de rede, como VPC, subnet, Internet Gateway, route table e associação.
-
-* `security.tf`
-  Recursos de segurança, como security group e regras de entrada e saída.
-
-* `ec2.tf`
-  Provisionamento da instância EC2 e configuração de `user_data`.
-
-* `outputs.tf`
-  Saídas da infraestrutura para consulta e validação.
-
-* `README.md`
-  Documentação principal do projeto.
 
 ---
 
@@ -143,17 +144,16 @@ A infraestrutura contempla:
 * Fase 4 — Segurança de acesso
 * Fase 5 — Provisionamento da EC2
 * Fase 6 — Refino do projeto
+* Fase 7 — Modularização
 
 ### Fase atual
 
-Fase 7 — Modularização
+Fase 8 — Estado remoto
 
 ### Próximas fases
 
-* Fase 8 — Estado remoto
 * Fase 9 — CI/CD com GitHub Actions
 * Fase 10 — Fechamento de portfólio
-
 ---
 
 ## Infraestrutura provisionada até o momento
@@ -342,11 +342,30 @@ Após o provisionamento da EC2, espera-se que o serviço responda algo semelhant
 
 ## Decisão de arquitetura
 
-Nesta etapa do projeto, a infraestrutura permanece organizada por responsabilidade de arquivo no root module, evitando modularização prematura.
+A arquitetura do projeto evoluiu de uma organização flat no root module para uma estrutura modular por domínio funcional.
 
-A adoção de módulos será considerada em fases futuras, quando houver repetição real de componentes, aumento de complexidade ou necessidade concreta de reutilização.
+Na Fase 7, os recursos foram separados em três módulos:
 
-Essa abordagem mantém o projeto simples, legível e alinhado ao estágio atual da solução, sem perder a possibilidade de evolução posterior.
+* `modules/network`
+* `modules/security`
+* `modules/compute`
+
+O root module passou a atuar como orquestrador da infraestrutura, centralizando:
+
+* chamadas dos módulos
+* variáveis de entrada globais
+* outputs finais
+* blocos `moved` para preservação segura do state durante a refatoração
+
+Essa abordagem melhora:
+
+* legibilidade
+* reuso
+* escalabilidade
+* clareza de responsabilidades
+* preparação do projeto para colaboração e backend remoto
+
+A modularização foi validada com `terraform validate` e `terraform plan`, preservando o comportamento da infraestrutura sem recriação indevida de recursos.
 
 ---
 
@@ -363,6 +382,31 @@ Essa abordagem mantém o projeto simples, legível e alinhado ao estágio atual 
 * documentação contínua do projeto
 
 ---
+
+## Modularização concluída na Fase 7
+
+A Fase 7 teve como objetivo demonstrar reuso e organização escalável da infraestrutura.
+
+O critério de conclusão desta fase foi:
+
+* separar os recursos em módulos funcionais
+* simplificar o root module
+* manter o comportamento da infraestrutura após a refatoração
+
+A refatoração foi executada com preservação de state por meio de blocos `moved`, evitando destruição e recriação indevida dos recursos já provisionados.
+
+### Resultado da modularização
+
+* rede migrada para `module.network`
+* segurança migrada para `module.security`
+* computação migrada para `module.compute`
+* root module simplificado
+* `terraform plan` final com:
+
+```bash
+Plan: 0 to add, 0 to change, 0 to destroy.
+``` 
+--- 
 
 ## Cuidados importantes
 
