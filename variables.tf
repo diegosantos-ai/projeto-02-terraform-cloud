@@ -35,3 +35,8 @@ variable "public_subnet_az" {
   type        = string
   default     = "us-east-1a"
 }
+
+variable "ssh_allowed_cidr" {
+  description = "CIDR permitido para acesso SSH"
+  type        = string
+}

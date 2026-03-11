@@ -37,3 +37,8 @@ output "public_route_table_id" {
   description = "ID da route table pública"
   value       = aws_route_table.public.id
 }
+
+output "web_security_group_id" {
+  description = "ID do security group do servico web"
+  value       = aws_security_group.web.id
+}
