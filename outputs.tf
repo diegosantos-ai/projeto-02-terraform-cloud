@@ -42,3 +42,18 @@ output "web_security_group_id" {
   description = "ID do security group do servico web"
   value       = aws_security_group.web.id
 }
+
+output "web_instance_id" {
+  description = "ID da instancia EC2 web"
+  value       = aws_instance.web.id
+}
+
+output "web_instance_public_ip" {
+  description = "IP publico da instancia EC2 web"
+  value       = aws_instance.web.public_ip
+}
+
+output "web_instance_public_dns" {
+  description = "DNS publico da instancia EC2 web"
+  value       = aws_instance.web.public_dns
+}

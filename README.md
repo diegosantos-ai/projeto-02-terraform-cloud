@@ -114,6 +114,12 @@ Fluxo lógico:
 
 > Observação: a estrutura será evoluída ao longo do projeto conforme a necessidade de organização, separação de responsabilidades e modularização.
 
+--- 
+```
+## Decisão de arquitetura:
+
+Nesta etapa do projeto, a infraestrutura permanecerá organizada por responsabilidade de arquivo no root module, evitando modularização prematura. A adoção de módulos será considerada em fases futuras, quando houver repetição real de componentes, aumento de complexidade ou necessidade concreta de reutilização. Essa abordagem mantém o projeto simples, legível e alinhado ao estágio atual da solução, sem perder a possibilidade de evolução posterior.
+
 ---
 
 ## Tecnologias Utilizadas

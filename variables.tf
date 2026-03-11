@@ -40,3 +40,14 @@ variable "ssh_allowed_cidr" {
   description = "CIDR permitido para acesso SSH"
   type        = string
 }
+
+variable "instance_type" {
+  description = "Tipo da instancia EC2"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "key_pair_name" {
+  description = "Nome do key pair existente na AWS para acesso SSH"
+  type        = string
+}
