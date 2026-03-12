@@ -145,15 +145,12 @@ A infraestrutura contempla:
 * Fase 5 — Provisionamento da EC2
 * Fase 6 — Refino do projeto
 * Fase 7 — Modularização
+* Fase 8 — Estado remoto
+* Fase 9 — CI/CD com GitHub Actions
 
 ### Fase atual
 
-Fase 8 — Estado remoto
-
-### Próximas fases
-
-* Fase 9 — CI/CD com GitHub Actions
-* Fase 10 — Fechamento de portfólio
+Fase 10 — Documentação e validação final
 ---
 
 ## Infraestrutura provisionada até o momento
@@ -227,19 +224,16 @@ Use o arquivo `terraform.tfvars.example` como referência para preencher o `terr
 Exemplo:
 
 ```hcl
-aws_region        = "us-east-1"
-project_name      = "projeto-02"
-environment       = "dev"
-owner             = "DiegoSantos"
-
-vpc_cidr_block    = "10.0.0.0/16"
+aws_region         = "us-east-1"
+project_name       = "projeto-02"
+environment        = "dev"
+owner              = "DiegoSantos"
+vpc_cidr           = "10.0.0.0/16"
 public_subnet_cidr = "10.0.1.0/24"
-availability_zone = "us-east-1a"
-
-ssh_allowed_cidr  = "SEU_IP_PUBLICO/32"
-
-instance_type     = "t3.micro"
-key_pair_name     = "diego-key"
+public_subnet_az   = "us-east-1a"
+ssh_allowed_cidr   = "SEU_IP_PUBLICO/32"
+instance_type      = "t3.micro"
+key_pair_name      = "diego-key"
 ```
 
 > O valor de `key_pair_name` deve ser o nome exato de um Key Pair já existente na AWS na região `us-east-1`.
@@ -285,6 +279,77 @@ terraform state list
 * revisar `terraform state list`
 * validar recursos no console AWS
 * validar entrega funcional do serviço
+
+---
+
+## CI/CD com GitHub Actions
+
+A partir da Fase 9, o projeto passou a contar com automação de validação e entrega controlada usando GitHub Actions.
+
+### Workflow de CI
+
+O workflow de CI executa automaticamente em:
+
+* `push` para `main`
+* `push` para `feature/**`
+* `pull_request` para `main`
+
+Esse workflow realiza dois jobs:
+
+#### Terraform Validate
+Validação estrutural do projeto sem depender do backend remoto:
+
+```bash
+terraform init -backend=false
+terraform fmt -check -recursive
+terraform validate
+```
+
+#### Terraform Plan
+
+Validação da infraestrutura com backend remoto e provider AWS reais:
+
+```bash
+terraform init
+terraform plan -input=false
+```
+
+Esse job utiliza autenticação AWS e variáveis do projeto configuradas no GitHub Actions.
+
+### Workflow de CD
+
+O workflow de CD executa o deploy da infraestrutura com:
+
+```bash
+terraform init
+terraform apply -auto-approve -input=false
+```
+
+O deploy foi implementado com gatilho manual (`workflow_dispatch`) e restrição de execução apenas na branch `main`. 
+
+Esse workflow não é executado automaticamente após o CI. O `terraform apply` foi mantido sob disparo manual para aumentar controle e reduzir risco operacional.
+
+Essa decisão foi adotada para manter o `terraform apply` sob controle humano explícito, reduzindo risco operacional em alterações reais na AWS.
+
+### Secrets utilizados 
+
+* `AWS_ACCESS_KEY_ID`
+* `AWS_SECRET_ACCESS_KEY`
+
+### Variáveis utilizadas
+
+* `TF_VAR_aws_region`
+* `TF_VAR_project_name`
+* `TF_VAR_environment`
+* `TF_VAR_owner`
+* `TF_VAR_ssh_allowed_cidr`
+* `TF_VAR_key_pair_name`
+
+### Observação de manutenção
+
+Durante a execução dos workflows, o projeto apresentou warning relacionado ao uso de `hashicorp/setup-terraform@v3` por conta da transição de runtime do GitHub Actions de Node.js 20 para Node.js 24.
+
+Esse ponto não bloqueia a execução atual, mas deve ser acompanhado em futuras manutenções do projeto.
 
 ---
 
@@ -433,15 +498,13 @@ terraform destroy
 
 ## Próximos passos
 
-A próxima etapa do projeto é a **Fase 6 — Refino do projeto**, com foco em:
+A próxima etapa do projeto é a **Fase 10 — Documentação e validação final**, com foco em:
 
-* revisão de nomes dos recursos
-* revisão de variáveis e defaults
-* revisão de outputs
-* redução de hard-codes
-* melhoria de legibilidade
-* melhoria de documentação
-* refinamento da reprodutibilidade
+* consolidar a documentação técnica do projeto
+* registrar evidências da execução
+* revisar arquitetura, decisões e aprendizados
+* reforçar a apresentação do projeto como item de portfólio
+* validar reprodutibilidade e encerramento técnico
 
 ---
 
